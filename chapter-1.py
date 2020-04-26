@@ -27,6 +27,17 @@ class Chapter1TestCase(unittest.TestCase):
         answer = ''.join(map(lambda i: s[i - 1], (1, 3, 5, 7)))
         self.assertEqual('パトカー', answer)
 
+    def test02(self):
+        """
+            02. 「パトカー」＋「タクシー」＝「パタトクカシーー」
+
+            「パトカー」＋「タクシー」の文字を先頭から交互に連結して文字列「パタトクカシーー」を得よ．
+        """
+        s1 = 'パトカー'
+        s2 = 'タクシー'
+        answer = ''.join(map(''.join, zip(s1, s2)))
+        self.assertEqual('パタトクカシーー', answer)
+
 
 if __name__ == '__main__':
     unittest.main()
