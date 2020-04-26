@@ -12,6 +12,23 @@ def _to_words(text):
     return pattern.findall(text)
 
 
+def _generate_ngram_from_word(n, word):
+    if len(word) < n:
+        return
+    for i in range(len(word) - n + 1):
+        yield word[i : i + n]
+
+
+def _generate_ngram_from_words(n, words):
+    for word in words:
+        yield from _generate_ngram_from_word(n, word)
+
+
+def _generate_ngram_from_text(n, text):
+    s = ''.join(_to_words(text))
+    yield from _generate_ngram_from_word(n, s)
+
+
 class Chapter1TestCase(unittest.TestCase):
 
     def test00(self):
@@ -109,6 +126,26 @@ class Chapter1TestCase(unittest.TestCase):
             20: 'Ca',
         }
         self.assertEqual(expected, answer)
+
+    def test05(self):
+        """
+            05. n-gram
+
+            与えられたシーケンス（文字列やリストなど）からn-gramを作る関数を作成
+            せよ．この関数を用い，"I am an NLPer" という文から単語bi-gram，文字
+            bi-gramを得よ．
+        """
+        s = 'I am an NLPer'
+
+        word_2gram = list(_generate_ngram_from_words(2, _to_words(s)))
+        self.assertEqual(
+            ['am', 'an', 'NL', 'LP', 'Pe', 'er'],
+            word_2gram)
+
+        text_2gram = list(_generate_ngram_from_text(2, s))
+        self.assertEqual(
+            ['Ia', 'am', 'ma', 'an', 'nN', 'NL', 'LP', 'Pe', 'er'],
+            text_2gram)
 
 
 if __name__ == '__main__':
