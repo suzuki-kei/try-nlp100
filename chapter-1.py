@@ -17,6 +17,16 @@ class Chapter1TestCase(unittest.TestCase):
         answer = s[::-1]
         self.assertEqual('desserts', answer)
 
+    def test01(self):
+        """
+            01. 「パタトクカシーー」
+
+            「パタトクカシーー」という文字列の1,3,5,7文字目を取り出して連結した文字列を得よ．
+        """
+        s = 'パタトクカシーー'
+        answer = ''.join(map(lambda i: s[i - 1], (1, 3, 5, 7)))
+        self.assertEqual('パトカー', answer)
+
 
 if __name__ == '__main__':
     unittest.main()
