@@ -147,6 +147,31 @@ class Chapter1TestCase(unittest.TestCase):
             ['Ia', 'am', 'ma', 'an', 'nN', 'NL', 'LP', 'Pe', 'er'],
             text_2gram)
 
+    def test06(self):
+        """
+            06. 集合
+
+            "paraparaparadise" と "paragraph" に含まれる文字bi-gramの集合を，
+            それぞれ, XとYとして求め，XとYの和集合，積集合，差集合を求めよ．
+            さらに，'se' というbi-gramがXおよびYに含まれるかどうかを調べよ．
+        """
+        x = set(_generate_ngram_from_text(2, 'paraparaparadise'))
+        self.assertSetEqual({'pa', 'ar', 'ra', 'ap', 'ad', 'di', 'is', 'se'}, x)
+
+        y = set(_generate_ngram_from_text(2, 'paragraph'))
+        self.assertSetEqual({'pa', 'ar', 'ra', 'ag', 'gr', 'ap', 'ph'}, y)
+
+        # 和集合
+        self.assertSetEqual(
+            {'pa', 'ar', 'ra', 'ap', 'ad', 'di', 'is', 'se', 'ag', 'gr', 'ph'},
+            x | y)
+
+        # 積集合
+        self.assertSetEqual({'pa', 'ar', 'ra', 'ap'}, x & y)
+
+        # 差集合 (x - y)
+        self.assertSetEqual({'ad', 'di', 'is', 'se'}, x - y)
+
 
 if __name__ == '__main__':
     unittest.main()
