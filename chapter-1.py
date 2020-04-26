@@ -6,6 +6,12 @@
 import re
 import unittest
 
+
+def _to_words(text):
+    pattern = re.compile(r'[a-zA-Z]+')
+    return pattern.findall(text)
+
+
 class Chapter1TestCase(unittest.TestCase):
 
     def test00(self):
@@ -52,7 +58,7 @@ class Chapter1TestCase(unittest.TestCase):
         """
         s = 'Now I need a drink, alcoholic of course, ' \
             'after the heavy lectures involving quantum mechanics.'
-        words = re.compile(r'[a-zA-Z]+').findall(s)
+        words = _to_words(s)
         answer = list(map(len, words))
         self.assertEqual([3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5, 8, 9, 7, 9], answer)
 
