@@ -184,6 +184,46 @@ class Chapter1TestCase(unittest.TestCase):
 
         self.assertEqual('12時の気温は22.4', f(12, '気温', 22.4))
 
+    def test08(self):
+        """
+            08. 暗号文
+
+            与えられた文字列の各文字を，以下の仕様で変換する関数cipherを実装せ
+            よ．
+
+             * 英小文字ならば(219 - 文字コード)の文字に置換
+             * その他の文字はそのまま出力
+
+            この関数を用い，英語のメッセージを暗号化・復号化せよ．
+        """
+        def cipher(text):
+            def convert(c):
+                if c in range(ord('a'), ord('z') + 1):
+                    return 219 - c
+                else:
+                    return c
+            return ''.join(map(chr, map(convert, map(ord, text))))
+
+        # empty string
+        self.assertEqual('', cipher(''))
+
+        # ASCII only
+        self.assertEqual(
+            '\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10' \
+            '\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !' \
+            '"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]' \
+            '^_`zyxwvutsrqponmlkjihgfedcba{|}~\x7f',
+            cipher(
+                '\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f' \
+                '\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e' \
+                '\x1f !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUV' \
+                'WXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\x7f'))
+
+        # both ASCII and multibyte
+        self.assertEqual(
+            'zyxDEFｇｈｉＪＫＬ',
+            cipher('abcDEFｇｈｉＪＫＬ'))
+
 
 if __name__ == '__main__':
     unittest.main()
