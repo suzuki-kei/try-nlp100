@@ -71,8 +71,6 @@ def _generate_ngram_from_word(
         >>> list(_generate_ngram_from_word(3, 'ab'))
         []
     """
-    if len(word) < n:
-        return
     for i in range(len(word) - n + 1):
         yield word[i : i + n]
 
