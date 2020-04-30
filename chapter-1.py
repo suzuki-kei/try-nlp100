@@ -3,6 +3,7 @@
 # https://nlp100.github.io/ja/ch01.html
 #
 
+import doctest
 import re
 import typing
 import unittest
@@ -11,22 +12,29 @@ import unittest
 def _to_words(
         text: str
     ) -> typing.List[str]:
+    """
+        テキストを単語に分割する.
+
+        Arguments
+        ---------
+        text : str
+            単語に分割するテキスト.
+
+        Returns
+        -------
+        words : typing.List[str]
+            text に含まれる単語からなるリスト.
+
+        Examples
+        --------
+        >>> _to_words('')
+        []
+        >>> _to_words("It's a fine day!")
+        ['It', 's', 'a', 'fine', 'day']
+    """
     pattern = re.compile(r'[a-zA-Z]+')
-    return pattern.findall(text)
-
-
-class ToWordsTestCase(unittest.TestCase):
-
-    def test(self):
-        self.assertEqual([], _to_words(''))
-        self.assertEqual(['a'], _to_words('a'))
-        self.assertEqual(['a'], _to_words(' a '))
-        self.assertEqual(
-            ['It', 's', 'a', 'fine', 'day'],
-            _to_words("It's a fine day!"))
-        self.assertEqual(
-            ['My', 'name', 'is', 'Jane', 'Due'],
-            _to_words('My name is Jane Due.'))
+    words = pattern.findall(text)
+    return words
 
 
 def _generate_ngram_from_word(
@@ -252,5 +260,6 @@ class Chapter1TestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    doctest.testmod()
     unittest.main()
 
