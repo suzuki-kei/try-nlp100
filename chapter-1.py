@@ -114,6 +114,33 @@ def _generate_ngram_from_text(
         n: int,
         text: str
     ) -> None:
+    """
+        テキストから N-gram を生成する.
+
+        Arguments
+        ---------
+        n : int
+            分割数.
+            指定した数の文字数に word を分割する.
+        text : str
+            テキスト.
+
+        Yields
+        ------
+        ngram : str
+            text に含まれる各単語を n 文字ずつに分割することで生成した N-gram.
+
+        Examples
+        --------
+        >>> list(_generate_ngram_from_text(1, ''))
+        []
+        >>> list(_generate_ngram_from_text(1, 'abc de'))
+        ['a', 'b', 'c', 'd', 'e']
+        >>> list(_generate_ngram_from_text(2, 'abc de'))
+        ['ab', 'bc', 'cd', 'de']
+        >>> list(_generate_ngram_from_text(3, 'abc de'))
+        ['abc', 'bcd', 'cde']
+    """
     s = ''.join(_to_words(text))
     yield from _generate_ngram_from_word(n, s)
 
