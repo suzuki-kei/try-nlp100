@@ -12,6 +12,20 @@ def _to_words(text):
     return pattern.findall(text)
 
 
+class ToWordsTestCase(unittest.TestCase):
+
+    def test(self):
+        self.assertEqual([], _to_words(''))
+        self.assertEqual(['a'], _to_words('a'))
+        self.assertEqual(['a'], _to_words(' a '))
+        self.assertEqual(
+            ['It', 's', 'a', 'fine', 'day'],
+            _to_words("It's a fine day!"))
+        self.assertEqual(
+            ['My', 'name', 'is', 'Jane', 'Due'],
+            _to_words('My name is Jane Due.'))
+
+
 def _generate_ngram_from_word(n, word):
     if len(word) < n:
         return
