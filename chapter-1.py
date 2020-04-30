@@ -79,6 +79,33 @@ def _generate_ngram_from_words(
         n: int,
         words: typing.List[str]
     ) -> None:
+    """
+        単語のリストから N-gram を生成する.
+
+        Arguments
+        ---------
+        n : int
+            分割数.
+            指定した数の文字数に word を分割する.
+        words : typing.List[str]
+            単語のリスト.
+
+        Yields
+        ------
+        ngram : str
+            words に含まれる各単語を n 文字ずつに分割することで生成した N-gram.
+
+        Examples
+        --------
+        >>> list(_generate_ngram_from_words(1, []))
+        []
+        >>> list(_generate_ngram_from_words(1, ['abc', 'de']))
+        ['a', 'b', 'c', 'd', 'e']
+        >>> list(_generate_ngram_from_words(2, ['abc', 'de']))
+        ['ab', 'bc', 'de']
+        >>> list(_generate_ngram_from_words(3, ['abc', 'de']))
+        ['abc']
+    """
     for word in words:
         yield from _generate_ngram_from_word(n, word)
 
