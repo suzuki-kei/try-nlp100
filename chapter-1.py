@@ -4,6 +4,7 @@
 #
 
 import doctest
+import random
 import re
 import typing
 import unittest
@@ -257,6 +258,53 @@ class Chapter1TestCase(unittest.TestCase):
         self.assertEqual(
             'zyxDEFｇｈｉＪＫＬ',
             cipher('abcDEFｇｈｉＪＫＬ'))
+
+    def test09(self):
+        """
+            09. Typoglycemia
+
+            スペースで区切られた単語列に対して，各単語の先頭と末尾の文字は残し，
+            それ以外の文字の順序をランダムに並び替えるプログラムを作成せよ．ただ
+            し，長さが４以下の単語は並び替えないこととする．適当な英語の文（例え
+            ば "I couldn't believe that I could actually understand what I was 
+            reading : the phenomenal power of the human mind ."）を与え，その実
+            行結果を確認せよ．
+        """
+        def shuffle(text):
+            chars = list(text)
+            random.shuffle(chars)
+            return ''.join(chars)
+
+        def typoglycemia(word):
+            if len(word) <= 4:
+                return word
+            head, center, tail = word[0], word[1:-2], word[-1]
+            return head + shuffle(center) + tail
+
+        s = "I couldn't believe that I could actually understand what I was " \
+            "reading : the phenomenal power of the human mind ."
+        words = list(map(typoglycemia, _to_words(s)))
+        self.assertEqual(20, len(words))
+        self.assertEqual('I', words[0])
+        self.assertEqual(['c', 'n'], [words[1][0], words[1][-1]])
+        self.assertEqual('t', words[2])
+        self.assertEqual(['b', 'e'], [words[3][0], words[3][-1]])
+        self.assertEqual('that', words[4])
+        self.assertEqual('I', words[5])
+        self.assertEqual(['c', 'd'], [words[6][0], words[6][-1]])
+        self.assertEqual(['a', 'y'], [words[7][0], words[7][-1]])
+        self.assertEqual(['u', 'd'], [words[8][0], words[8][-1]])
+        self.assertEqual('what', words[9])
+        self.assertEqual('I', words[10])
+        self.assertEqual('was', words[11])
+        self.assertEqual(['r', 'g'], [words[12][0], words[12][-1]])
+        self.assertEqual('the', words[13])
+        self.assertEqual(['p', 'l'], [words[14][0], words[14][-1]])
+        self.assertEqual(['p', 'r'], [words[15][0], words[15][-1]])
+        self.assertEqual('of', words[16])
+        self.assertEqual('the', words[17])
+        self.assertEqual(['h', 'n'], [words[18][0], words[18][-1]])
+        self.assertEqual('mind', words[19])
 
 
 if __name__ == '__main__':
