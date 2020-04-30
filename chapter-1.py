@@ -4,10 +4,13 @@
 #
 
 import re
+import typing
 import unittest
 
 
-def _to_words(text):
+def _to_words(
+        text: str
+    ) -> typing.List[str]:
     pattern = re.compile(r'[a-zA-Z]+')
     return pattern.findall(text)
 
@@ -26,19 +29,28 @@ class ToWordsTestCase(unittest.TestCase):
             _to_words('My name is Jane Due.'))
 
 
-def _generate_ngram_from_word(n, word):
+def _generate_ngram_from_word(
+        n: int,
+        word: str
+    ) -> None:
     if len(word) < n:
         return
     for i in range(len(word) - n + 1):
         yield word[i : i + n]
 
 
-def _generate_ngram_from_words(n, words):
+def _generate_ngram_from_words(
+        n: int,
+        words: typing.List[str]
+    ) -> None:
     for word in words:
         yield from _generate_ngram_from_word(n, word)
 
 
-def _generate_ngram_from_text(n, text):
+def _generate_ngram_from_text(
+        n: int,
+        text: str
+    ) -> None:
     s = ''.join(_to_words(text))
     yield from _generate_ngram_from_word(n, s)
 
