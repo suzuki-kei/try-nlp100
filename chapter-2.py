@@ -114,8 +114,8 @@ def test11():
     """
         11. タブをスペースに置換
 
-        タブ 1 文字につきスペース 1 文字に置換せよ.
-        確認には sed コマンド, tr コマンド, もしくは expand コマンドを用いよ.
+        タブ 1 文字につきスペース 1 文字に置換せよ. 確認には sed コマンド, tr
+        コマンド, もしくは expand コマンドを用いよ.
     """
     text = text_from_file('popular-names.txt')
     print(expand_tab(text, 1))
@@ -144,9 +144,8 @@ def test12():
     """
         12. 1 列目を col1.txt に, 2 列目を col2.txt に保存
 
-        各行の 1 列目だけを抜き出したものを col1.txt に,
-        2 列目だけを抜き出したものを col2.txt としてファイルに保存せよ.
-        確認には cut コマンドを用いよ.
+        各行の 1 列目だけを抜き出したものを col1.txt に, 2 列目だけを抜き出した
+        ものを col2.txt としてファイルに保存せよ. 確認には cut コマンドを用いよ.
     """
     text = text_from_file('popular-names.txt')
     lines = text.splitlines()
