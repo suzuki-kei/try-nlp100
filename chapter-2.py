@@ -8,8 +8,24 @@ import typing
 import unittest
 
 
+def test10():
+    """
+        10. 行数のカウント
+
+        行数をカウントせよ. 確認には wc コマンドを用いよ.
+
+        Examples
+        --------
+        >>> test10()
+        2780
+    """
+    with open('popular-names.txt') as file:
+        lines = list(map(str.strip, file.readlines()))
+        print(len(lines))
+
+
 def main():
-    ...
+    test10()
 
 
 def test():
