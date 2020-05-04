@@ -60,6 +60,39 @@ class CountLinesTestCase(unittest.TestCase):
         self.assertEqual(3, count_lines('abc\ndef\nghi\n'))
 
 
+def expand_tab(
+        text: str,
+        tab_size: int,
+    ) -> str:
+    """
+        テキストに含まれるタブをスペースに置換する.
+
+        Arguments
+        ---------
+        text : str
+            テキスト.
+        tab_size : int
+            1 つのタブを tab_size 個の ' ' に置換する.
+
+        Returns
+        -------
+        text : str
+            text に含まれる各タブを tab_size 個の ' ' に置換したテキスト.
+    """
+    return text.replace('\t', ' ' * tab_size)
+
+
+class ExpandTabTestCase(unittest.TestCase):
+
+    def test(self):
+        self.assertEqual('', expand_tab('', 1))
+        self.assertEqual('ABC', expand_tab('ABC', 1))
+        self.assertEqual('A B C', expand_tab('A B C', 1))
+        self.assertEqual('A B C', expand_tab('A\tB\tC', 1))
+        self.assertEqual('A  B  C', expand_tab('A\tB\tC', 2))
+        self.assertEqual('A    B    C', expand_tab('A\t\tB\t\tC', 2))
+
+
 def test10():
     """
         10. 行数のカウント
@@ -75,8 +108,20 @@ def test10():
     return count_lines(text)
 
 
+def test11():
+    """
+        11. タブをスペースに置換
+
+        タブ 1 文字につきスペース 1 文字に置換せよ.
+        確認には sed コマンド, tr コマンド, もしくは expand コマンドを用いよ.
+    """
+    text = text_from_file('popular-names.txt')
+    print(expand_tab(text, 1))
+
+
 def main():
     test10()
+    test11()
 
 
 def test():
