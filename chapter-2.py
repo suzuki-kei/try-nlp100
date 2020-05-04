@@ -119,9 +119,54 @@ def test11():
     print(expand_tab(text, 1))
 
 
+def test12():
+    """
+        12. 1 列目を col1.txt に, 2 列目を col2.txt に保存
+
+        各行の 1 列目だけを抜き出したものを col1.txt に,
+        2 列目だけを抜き出したものを col2.txt としてファイルに保存せよ.
+        確認には cut コマンドを用いよ.
+    """
+    text = text_from_file('popular-names.txt')
+    lines = text.splitlines()
+
+    with open('col1.txt', 'w') as col1_file, \
+         open('col2.txt', 'w') as col2_file:
+        for line in lines:
+            columns = line.split('\t')
+            col1_file.write(columns[0] + '\n')
+            col2_file.write(columns[1] + '\n')
+
+
+class Test12TestCase(unittest.TestCase):
+    """
+        test12() のテストケース.
+    """
+
+    def test(self):
+        test12()
+
+        col1_lines = text_from_file('col1.txt').splitlines()
+        self.assertEqual('Mary', col1_lines[0])
+        self.assertEqual('Anna', col1_lines[1])
+        self.assertEqual('Emma', col1_lines[2])
+        self.assertEqual('Lucas', col1_lines[-3])
+        self.assertEqual('Mason', col1_lines[-2])
+        self.assertEqual('Logan', col1_lines[-1])
+
+        col2_lines = text_from_file('col2.txt').splitlines()
+        self.assertEqual('F', col2_lines[0])
+        self.assertEqual('F', col2_lines[1])
+        self.assertEqual('F', col2_lines[2])
+        self.assertEqual('M', col2_lines[-3])
+        self.assertEqual('M', col2_lines[-2])
+        self.assertEqual('M', col2_lines[-1])
+
+
 def main():
     test10()
     test11()
+    test12()
 
 
 def test():
