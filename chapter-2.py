@@ -149,17 +149,14 @@ class Test11TestCase(unittest.TestCase):
     """
 
     def test(self):
-        stdout = io.StringIO()
-        with contextlib.redirect_stdout(stdout):
-            test11()
-        lines = stdout.getvalue().splitlines()
-        self.assertEqual('Mary F 7065 1880', lines[0])
-        self.assertEqual('Anna F 2604 1880', lines[1])
-        self.assertEqual('Emma F 2003 1880', lines[2])
-        self.assertEqual('Lucas M 12585 2018', lines[-4])
-        self.assertEqual('Mason M 12435 2018', lines[-3])
-        self.assertEqual('Logan M 12352 2018', lines[-2])
-        self.assertEqual('', lines[-1])
+        stdout = execute_and_return_stdout(test11)
+        self.assertEqual('Mary F 7065 1880', stdout[0])
+        self.assertEqual('Anna F 2604 1880', stdout[1])
+        self.assertEqual('Emma F 2003 1880', stdout[2])
+        self.assertEqual('Lucas M 12585 2018', stdout[-4])
+        self.assertEqual('Mason M 12435 2018', stdout[-3])
+        self.assertEqual('Logan M 12352 2018', stdout[-2])
+        self.assertEqual('', stdout[-1])
 
 
 def test12():
