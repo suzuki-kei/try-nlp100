@@ -105,7 +105,7 @@ def test10():
         2780
     """
     text = text_from_file('popular-names.txt')
-    return count_lines(text)
+    print(count_lines(text))
 
 
 def test11():
