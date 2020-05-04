@@ -10,6 +10,28 @@ import typing
 import unittest
 
 
+def execute_and_return_stdout(
+        target: callable,
+    ) -> typing.List[str]:
+    """
+        指定された処理を実行し, 標準出力の値を取得する.
+
+        Arguments
+        ---------
+        target : callable
+            引数無しで呼び出し可能なオブジェクト.
+
+        Returns
+        -------
+        stdout : typing.List[str]
+            target の実行中に標準出力に出力された内容.
+    """
+    stdout = io.StringIO()
+    with contextlib.redirect_stdout(stdout):
+        target()
+    return stdout.getvalue().splitlines()
+
+
 def text_from_file(
         file_path: str,
     ) -> str:
@@ -183,10 +205,41 @@ class Test12TestCase(unittest.TestCase):
         self.assertEqual('M', col2_lines[-1])
 
 
+def test13():
+    """
+        13. col1.txt と col2.txt をマージ
+
+        12 で作った col1.txt と col2.txt を結合し, 元のファイルの 1 列目と 2 列
+        目をタブ区切りで並べたテキストファイルを作成せよ. 確認には paste コマン
+        ドを用いよ.
+    """
+    col1_lines = text_from_file('col1.txt').splitlines()
+    col2_lines = text_from_file('col2.txt').splitlines()
+
+    for values in zip(col1_lines, col2_lines):
+        print('\t'.join(values))
+
+
+class Test13TestCase(unittest.TestCase):
+    """
+        test13() のテストケース.
+    """
+
+    def test(self):
+        stdout = execute_and_return_stdout(test13)
+        self.assertEqual('Mary\tF', stdout[0])
+        self.assertEqual('Anna\tF', stdout[1])
+        self.assertEqual('Emma\tF', stdout[2])
+        self.assertEqual('Lucas\tM', stdout[-3])
+        self.assertEqual('Mason\tM', stdout[-2])
+        self.assertEqual('Logan\tM', stdout[-1])
+
+
 def main():
     test10()
     test11()
     test12()
+    test13()
 
 
 def test():
