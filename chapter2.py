@@ -6,6 +6,7 @@
 import contextlib
 import doctest
 import io
+import os
 import typing
 import unittest
 
@@ -187,6 +188,52 @@ class TailLinesTestCase(unittest.TestCase):
         self.assertEqual('aaa\nbbb\nccc', tail_lines(4, 'aaa\nbbb\nccc'))
 
 
+def to_chunks(
+        n: int,
+        text: str,
+    ) -> typing.List[str]:
+    """
+        テキストを行指向で N 個に分割する.
+
+        Arguments
+        ---------
+        n : int
+            分割数.
+        text : str
+            分割するテキスト.
+
+        Returns
+        -------
+        chunks : typing.List[str]
+            text を n 個に分割したリスト.
+    """
+    lines = text.splitlines()
+    chunks = [[] for _ in range(n)]
+
+    for i in range(len(lines)):
+        chunks[int(i / len(lines) * n)].append(lines[i])
+    return list(map('\n'.join, chunks))
+
+
+class ToChunksTestCase(unittest.TestCase):
+    """
+        to_chunks() のテストケース.
+    """
+
+    def test(self):
+        text = '\n'.join('ABCDE')
+        self.assertEqual(['A\nB\nC\nD\nE'], to_chunks(1, text))
+        self.assertEqual(['A\nB\nC', 'D\nE'], to_chunks(2, text))
+        self.assertEqual(['A\nB', 'C\nD', 'E'], to_chunks(3, text))
+        self.assertEqual(['A\nB', 'C', 'D', 'E'], to_chunks(4, text))
+        self.assertEqual(['A', 'B', 'C', 'D', 'E'], to_chunks(5, text))
+        self.assertEqual(['A', 'B', 'C', 'D', 'E', ''], to_chunks(6, text))
+        self.assertEqual(['A', 'B', 'C', '', 'D', 'E', ''], to_chunks(7, text))
+        self.assertEqual(['A', 'B', '', 'C', 'D', '', 'E', ''], to_chunks(8, text))
+        self.assertEqual(['A', 'B', '', 'C', '', 'D', '', 'E', ''], to_chunks(9, text))
+        self.assertEqual(['A', '', 'B', '', 'C', '', 'D', '', 'E', ''], to_chunks(10, text))
+
+
 def practice10():
     """ 10. 行数のカウント
 
@@ -326,6 +373,33 @@ def practice15():
     N = int(input())
     text = text_from_file('col1.txt')
     print(tail_lines(N, text))
+
+
+def practice16():
+    """
+        16. ファイルを N 分割する
+
+        自然数 N をコマンドライン引数などの手段で受け取り,
+        入力のファイルを行単位で N 分割せよ.
+        同様の処理を split コマンドで実現せよ.
+    """
+    print('N = ', end='')
+    N = int(input())
+    input_file_path = './popular-names.txt'
+    text = text_from_file(input_file_path)
+    chunks = to_chunks(N, text)
+
+    def to_output_file_path(input_file_path, chunks, chunk_index):
+        suffix_length = len(str(max(1, len(chunks) - 1)))
+        suffix = '{:0={}}'.format(chunk_index, suffix_length)
+        root, ext = os.path.splitext(os.path.abspath(input_file_path))
+        return '{}.{}{}'.format(root, suffix, ext)
+
+    for i in range(len(chunks)):
+        output_file_path = to_output_file_path(input_file_path, chunks, i)
+        with open(output_file_path, 'w') as file:
+            print('write to {}'.format(output_file_path))
+            file.write(chunks[i])
 
 
 def test():
