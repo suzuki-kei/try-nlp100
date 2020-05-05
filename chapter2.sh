@@ -84,7 +84,7 @@ function practice15 {
 function practice16 {
     echo -n 'N = '
     read N
-    split -n l/$N -d popular-names.txt _popular-names. --additional-suffix=.txt
+    split -n l/$N -d popular-names.txt popular-names. --additional-suffix=.txt
 }
 
 #
