@@ -5,7 +5,9 @@
 
 from chapter2 import text_from_file
 import doctest
+import itertools
 import json
+import re
 import typing
 import unittest
 
@@ -37,6 +39,21 @@ def practice20():
 
     for document in filter(is_england, documents):
         print(document['text'])
+
+
+def practice21():
+    """
+        21. カテゴリ名を含む行を抽出
+
+        記事中でカテゴリ名を宣言している行を抽出せよ.
+    """
+    documents = _load_documents()
+    text_from_document = lambda document: document['text']
+    texts = map(text_from_document, documents)
+    lines = itertools.chain(*map(str.splitlines, texts))
+    category_line_pattern = re.compile('\[\[Category:.+(:?|.+)?\]\]')
+    category_lines = filter(category_line_pattern.match, lines)
+    print('\n'.join(sorted(set(category_lines))))
 
 
 def test():
