@@ -27,6 +27,11 @@ def _load_documents():
     return list(documents)
 
 
+def match_category_line(line):
+    pattern = re.compile('\[\[Category:(.+?)(:?\|.+)?\]\]')
+    return pattern.fullmatch(line)
+
+
 def practice20():
     """
         20. JSONデータの読み込み
@@ -51,9 +56,24 @@ def practice21():
     text_from_document = lambda document: document['text']
     texts = map(text_from_document, documents)
     lines = itertools.chain(*map(str.splitlines, texts))
-    category_line_pattern = re.compile('\[\[Category:.+(:?|.+)?\]\]')
-    category_lines = filter(category_line_pattern.match, lines)
+    category_lines = filter(match_category_line, lines)
     print('\n'.join(sorted(set(category_lines))))
+
+
+def practice22():
+    """
+        22. カテゴリ名の抽出
+
+        記事のカテゴリ名を (行単位ではなく名前で) 抽出せよ.
+    """
+    documents = _load_documents()
+    text_from_document = lambda document: document['text']
+    texts = map(text_from_document, documents)
+    lines = itertools.chain(*map(str.splitlines, texts))
+    category_lines = filter(match_category_line, lines)
+    to_category_name = lambda line: match_category_line(line)[1]
+    category_names = map(to_category_name, category_lines)
+    print('\n'.join(sorted(set(category_names))))
 
 
 def test():
