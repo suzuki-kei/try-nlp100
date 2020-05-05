@@ -117,9 +117,42 @@ class ExpandTabTestCase(unittest.TestCase):
         self.assertEqual('A    B    C', expand_tab('A\t\tB\t\tC', 2))
 
 
-def practice10():
+def head_lines(
+        n: int,
+        text: str,
+    ) -> typing.List[str]:
     """
-        10. 行数のカウント
+        テキストの先頭から指定行数を取り出す.
+
+        Arguments
+        ---------
+        n : int
+            取り出す行数.
+        text : str
+            テキスト.
+    """
+    lines = text.splitlines()
+    return '\n'.join(lines[:n])
+
+
+class HeadLinesTestCase(unittest.TestCase):
+    """
+        head_lines() のテストケース.
+    """
+
+    def test(self):
+        self.assertEqual('', head_lines(0, ''))
+        self.assertEqual('', head_lines(1, ''))
+
+        self.assertEqual('', head_lines(0, 'aaa\nbbb\nccc'))
+        self.assertEqual('aaa', head_lines(1, 'aaa\nbbb\nccc'))
+        self.assertEqual('aaa\nbbb', head_lines(2, 'aaa\nbbb\nccc'))
+        self.assertEqual('aaa\nbbb\nccc', head_lines(3, 'aaa\nbbb\nccc'))
+        self.assertEqual('aaa\nbbb\nccc', head_lines(4, 'aaa\nbbb\nccc'))
+
+
+def practice10():
+    """ 10. 行数のカウント
 
         行数をカウントせよ. 確認には wc コマンドを用いよ.
 
@@ -230,6 +263,19 @@ class practice13TestCase(unittest.TestCase):
         self.assertEqual('Lucas\tM', stdout[-3])
         self.assertEqual('Mason\tM', stdout[-2])
         self.assertEqual('Logan\tM', stdout[-1])
+
+
+def practice14():
+    """
+        14. 先頭からN行を出力
+
+        自然数 N をコマンドライン引数などの手段で受け取り, 入力のうち先頭の N
+        行だけを表示せよ. 確認には head コマンドを用いよ.
+    """
+    print('N = ', end='')
+    N = int(input())
+    text = text_from_file('col1.txt')
+    print(head_lines(N, text))
 
 
 def test():
