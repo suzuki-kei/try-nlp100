@@ -420,6 +420,21 @@ def practice17():
     print(len(set(names)))
 
 
+def practice18():
+    """
+        18. 各行を 3 コラム目の数値の降順にソート
+
+        各行を 3 コラム目の数値の逆順で整列せよ (注意: 各行の内容は変更せずに並
+        び替えよ). 確認には sort コマンドを用いよ (この問題はコマンドで実行した
+        時の結果と合わなくてもよい).
+    """
+    text = text_from_file('popular-names.txt')
+    lines = text.splitlines()
+    to_key = lambda line: int(line.split()[2])
+    sorted_lines = sorted(lines, key=to_key, reverse=True)
+    print('\n'.join(sorted_lines))
+
+
 def test():
     doctest.testmod()
     unittest.main()
