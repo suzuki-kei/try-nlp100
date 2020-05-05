@@ -6,6 +6,11 @@
 
  * 言語処理100本ノック 2020 (https://nlp100.github.io/ja/)
 
+## 事前準備
+
+    # 第 2 章で使用するファイルをダウンロードする.
+    curl -o popular-names.txt https://nlp100.github.io/data/popular-names.txt
+
 ## 実行方法
 
 テストを実行するには `make test` とします.
