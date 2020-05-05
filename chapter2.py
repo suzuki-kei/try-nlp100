@@ -117,7 +117,7 @@ class ExpandTabTestCase(unittest.TestCase):
         self.assertEqual('A    B    C', expand_tab('A\t\tB\t\tC', 2))
 
 
-def test10():
+def practice10():
     """
         10. 行数のカウント
 
@@ -125,14 +125,14 @@ def test10():
 
         Examples
         --------
-        >>> test10()
+        >>> practice10()
         2780
     """
     text = text_from_file('popular-names.txt')
     print(count_lines(text))
 
 
-def test11():
+def practice11():
     """
         11. タブをスペースに置換
 
@@ -143,13 +143,13 @@ def test11():
     print(expand_tab(text, 1))
 
 
-class Test11TestCase(unittest.TestCase):
+class practice11TestCase(unittest.TestCase):
     """
-        test11() のテストケース.
+        practice11() のテストケース.
     """
 
     def test(self):
-        stdout = execute_and_return_stdout(test11)
+        stdout = execute_and_return_stdout(practice11)
         self.assertEqual('Mary F 7065 1880', stdout[0])
         self.assertEqual('Anna F 2604 1880', stdout[1])
         self.assertEqual('Emma F 2003 1880', stdout[2])
@@ -159,7 +159,7 @@ class Test11TestCase(unittest.TestCase):
         self.assertEqual('', stdout[-1])
 
 
-def test12():
+def practice12():
     """
         12. 1 列目を col1.txt に, 2 列目を col2.txt に保存
 
@@ -177,13 +177,13 @@ def test12():
             col2_file.write(columns[1] + '\n')
 
 
-class Test12TestCase(unittest.TestCase):
+class practice12TestCase(unittest.TestCase):
     """
-        test12() のテストケース.
+        practice12() のテストケース.
     """
 
     def test(self):
-        test12()
+        practice12()
 
         col1_lines = text_from_file('col1.txt').splitlines()
         self.assertEqual('Mary', col1_lines[0])
@@ -202,7 +202,7 @@ class Test12TestCase(unittest.TestCase):
         self.assertEqual('M', col2_lines[-1])
 
 
-def test13():
+def practice13():
     """
         13. col1.txt と col2.txt をマージ
 
@@ -217,13 +217,13 @@ def test13():
         print('\t'.join(values))
 
 
-class Test13TestCase(unittest.TestCase):
+class practice13TestCase(unittest.TestCase):
     """
-        test13() のテストケース.
+        practice13() のテストケース.
     """
 
     def test(self):
-        stdout = execute_and_return_stdout(test13)
+        stdout = execute_and_return_stdout(practice13)
         self.assertEqual('Mary\tF', stdout[0])
         self.assertEqual('Anna\tF', stdout[1])
         self.assertEqual('Emma\tF', stdout[2])
@@ -232,19 +232,11 @@ class Test13TestCase(unittest.TestCase):
         self.assertEqual('Logan\tM', stdout[-1])
 
 
-def main():
-    test10()
-    test11()
-    test12()
-    test13()
-
-
 def test():
     doctest.testmod()
     unittest.main()
 
 
 if __name__ == '__main__':
-    main()
     test()
 

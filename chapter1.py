@@ -329,7 +329,7 @@ class TypoglycemiaTestCase(unittest.TestCase):
         self.assertEqual(['.', '.'], [words[20][0], words[20][-1]])
 
 
-def test00():
+def practice00():
     """
         00. 文字列の逆順
 
@@ -338,14 +338,14 @@ def test00():
 
         Examples
         --------
-        >>> test00()
+        >>> practice00()
         desserts
     """
     text = 'stressed'
     print(text[::-1])
 
 
-def test01():
+def practice01():
     """
         01. 「パタトクカシーー」
 
@@ -354,14 +354,14 @@ def test01():
 
         Examples
         --------
-        >>> test01()
+        >>> practice01()
         パトカー
     """
     text = 'パタトクカシーー'
     print(''.join(map(lambda n: text[n - 1], [1, 3, 5 ,7])))
 
 
-def test02():
+def practice02():
     """
         02. 「パトカー」＋「タクシー」＝「パタトクカシーー」
 
@@ -370,7 +370,7 @@ def test02():
 
         Examples
         --------
-        >>> test02()
+        >>> practice02()
         パタトクカシーー
     """
     text1 = 'パトカー'
@@ -378,7 +378,7 @@ def test02():
     print(''.join(map(''.join, zip(text1, text2))))
 
 
-def test03():
+def practice03():
     """
         03. 円周率
 
@@ -388,7 +388,7 @@ def test03():
 
         Examples
         --------
-        >>> test03()
+        >>> practice03()
         [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5, 8, 9, 7, 9]
     """
     text = 'Now I need a drink, alcoholic of course, ' \
@@ -397,7 +397,7 @@ def test03():
     print(list(map(lambda word: len(word), words)))
 
 
-def test04():
+def practice04():
     """
         04. 元素記号
 
@@ -409,7 +409,7 @@ def test04():
 
         Examples
         --------
-        >>> test04()
+        >>> practice04()
         {1: 'H', 2: 'He', 3: 'Li', 4: 'Be', 5: 'B', 6: 'C', 7: 'N', 8: 'O', 9: 'F', 10: 'Ne', 11: 'Na', 12: 'Mi', 13: 'Al', 14: 'Si', 15: 'P', 16: 'S', 17: 'Cl', 18: 'Ar', 19: 'K', 20: 'Ca'}
     """
     text = 'Hi He Lied Because Boron Could Not Oxidize Fluorine. ' \
@@ -423,7 +423,7 @@ def test04():
     })
 
 
-def test05():
+def practice05():
     """
         05. n-gram
 
@@ -433,7 +433,7 @@ def test05():
 
         Examples
         --------
-        >>> test05()
+        >>> practice05()
         ['Iam', 'aman', 'anNLPer']
         ['Ia', 'am', 'ma', 'an', 'nN', 'NL', 'LP', 'Pe', 'er']
     """
@@ -442,7 +442,7 @@ def test05():
     print(to_char_ngram(2, text))
 
 
-def test06():
+def practice06():
     """
         06. 集合
 
@@ -452,7 +452,7 @@ def test06():
 
         Examples
         --------
-        >>> test06()
+        >>> practice06()
         X = ['ad', 'ap', 'ar', 'di', 'is', 'pa', 'ra', 'se']
         Y = ['ag', 'ap', 'ar', 'gr', 'pa', 'ph', 'ra']
         X | Y = ['ad', 'ag', 'ap', 'ar', 'di', 'gr', 'is', 'pa', 'ph', 'ra', 'se']
@@ -472,7 +472,7 @@ def test06():
     print('X - Y = {}'.format(sorted(X - Y)))
 
 
-def test07():
+def practice07():
     """
         07. テンプレートによる文生成
 
@@ -481,7 +481,7 @@ def test07():
 
         Examples
         --------
-        >>> test07()
+        >>> practice07()
         12時の気温は22.4
     """
     def format(x, y, z):
@@ -490,7 +490,7 @@ def test07():
     print(format(12, '気温', 22.4))
 
 
-def test08():
+def practice08():
     """
         08. 暗号文
 
@@ -503,13 +503,13 @@ def test08():
 
         Examples
         --------
-        >>> test08()
+        >>> practice08()
         I zn zm NLPvi
     """
     print(cipher('I am an NLPer'))
 
 
-def test09():
+def practice09():
     """
         09. Typoglycemia
 
@@ -529,25 +529,11 @@ def test09():
     print(to_typoglycemia(text))
 
 
-def main():
-    test00()
-    test01()
-    test02()
-    test03()
-    test04()
-    test05()
-    test06()
-    test07()
-    test08()
-    test09()
-
-
 def test():
     doctest.testmod()
     unittest.main()
 
 
 if __name__ == '__main__':
-    main()
     test()
 

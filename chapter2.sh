@@ -8,7 +8,7 @@
 #
 # 行数をカウントせよ. 確認には wc コマンドを用いよ.
 #
-function test10 {
+function practice10 {
     if [[ ! -f popular-names.txt ]]; then
         curl -o popular-names.txt https://nlp100.github.io/data/popular-names.txt
     fi
@@ -21,7 +21,7 @@ function test10 {
 # タブ 1 文字につきスペース 1 文字に置換せよ.
 # 確認には sed コマンド, tr コマンド, もしくは expand コマンドを用いよ.
 #
-function test11 {
+function practice11 {
     cat popular-names.txt | tr -s '\t' ' '
 }
 
@@ -32,7 +32,7 @@ function test11 {
 # 2 列目だけを抜き出したものを col2.txt としてファイルに保存せよ.
 # 確認には cut コマンドを用いよ.
 #
-function test12 {
+function practice12 {
     cat popular-names.txt | cut -f1 > col1.txt
     cat popular-names.txt | cut -f2 > col2.txt
 }
@@ -44,7 +44,7 @@ function test12 {
 # 元のファイルの 1 列目と 2 列目をタブ区切りで並べたテキストファイルを作成せよ.
 # 確認には paste コマンドを用いよ.
 #
-function test13 {
+function practice13 {
     paste col1.txt col2.txt
 }
 
@@ -55,7 +55,7 @@ function test13 {
 # 入力のうち先頭の N 行だけを表示せよ.
 # 確認には head コマンドを用いよ.
 #
-function test14 {
+function practice14 {
     echo -n 'N = '
     read N
     head -n $N popular-names.txt
@@ -68,7 +68,7 @@ function test14 {
 # 入力のうち末尾の N 行だけを表示せよ.
 # 確認には tail コマンドを用いよ.
 #
-function test15 {
+function practice15 {
     echo -n 'N = '
     read N
     tail -n $N popular-names.txt
@@ -81,7 +81,7 @@ function test15 {
 # 入力のファイルを行単位で N 分割せよ.
 # 同様の処理を split コマンドで実現せよ.
 #
-function test16 {
+function practice16 {
     echo -n 'N = '
     read N
     split -n l/$N -d popular-names.txt _popular-names. --additional-suffix=.txt
@@ -93,7 +93,7 @@ function test16 {
 # 1 列目の文字列の種類 (異なる文字列の集合) を求めよ.
 # 確認には cut, sort, uniq コマンドを用いよ.
 #
-function test17 {
+function practice17 {
     cat popular-names.txt | cut -f1 | sort | uniq
 }
 
@@ -103,14 +103,14 @@ function test17 {
 # 各行を 3 コラム目の数値の逆順で整列せよ (注意: 各行の内容は変更せずに並び替えよ).
 # 確認には sort コマンドを用いよ (この問題はコマンドで実行した時の結果と合わなくてもよい).
 #
-function test18 {
+function practice18 {
     cat popular-names.txt | sort -k3 -nr
 }
 
 #
 # 19. 各行の 1 コラム目の文字列の出現頻度を求め, 出現頻度の高い順に並べる.
 #
-function test19 {
+function practice19 {
     cat popular-names.txt | cut -f1 | sort | uniq -c | sort -nr -k1 | awk '{print $2}'
 }
 
