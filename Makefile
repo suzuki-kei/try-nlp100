@@ -7,13 +7,16 @@ test:
 	$(PYTHON) chapter1.py
 	$(PYTHON) chapter2.py
 
+# 実行されたルール名から章番号と課題番号を特定し, 変数に設定する.
 run\:%: \
-	practice=practice$(shell echo $@ | sed -E 's/[^0-9]+//g')
-	chapter=chapter$(shell expr `echo $@ | sed -E 's/^[^0-9]+|[0-9][^0-9]*$$//g'` + 1)
+	chapter_no = $(shell expr `echo $@ | sed -E 's/^[^0-9]+|[0-9][^0-9]*$$//g'` + 1)
+	chapter_name = chapter$(chapter_no)
+	practice_no = $(shell echo $@ | sed -E 's/[^0-9]+//g')
+	practice_name = practice$(practice_no)
 
 run\:%.sh:
-	@(source $(chapter).sh && $(practice))
+	@(source $(chapter_name).sh && $(practice_name))
 
 run\:%:
-	@$(PYTHON) -B -c 'import $(chapter); $(chapter).$(practice)()'
+	$(PYTHON) -B run.py --chapter=$(chapter_no) --practice=$(practice_no)
 
