@@ -435,6 +435,26 @@ def practice18():
     print('\n'.join(sorted_lines))
 
 
+def practice19():
+    """
+        19. 各行の 1 コラム目の文字列の出現頻度を求め, 出現頻度の高い順に並べる.
+    """
+    text = text_from_file('popular-names.txt')
+    lines = text.splitlines()
+    values = [line.split()[0] for line in lines]
+    histogram = to_histogram(values)
+
+    for value, count in sorted(histogram.items(), key=lambda pair: pair[1], reverse=True):
+        print(count, value)
+
+
+def to_histogram(values):
+    histogram = {}
+    for value in values:
+        histogram[value] = histogram.get(value, 0) + 1
+    return histogram
+
+
 def test():
     doctest.testmod()
     unittest.main()
