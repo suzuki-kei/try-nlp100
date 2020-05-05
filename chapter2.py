@@ -151,6 +151,42 @@ class HeadLinesTestCase(unittest.TestCase):
         self.assertEqual('aaa\nbbb\nccc', head_lines(4, 'aaa\nbbb\nccc'))
 
 
+def tail_lines(
+        n: int,
+        text: str,
+    ) -> typing.List[str]:
+    """
+        テキストの末尾から指定行数を取り出す.
+
+        Arguments
+        ---------
+        n : int
+            取り出す行数.
+        text : str
+            テキスト.
+    """
+    if n <= 0:
+        return ''
+    lines = text.splitlines()
+    return '\n'.join(lines[-n:])
+
+
+class TailLinesTestCase(unittest.TestCase):
+    """
+        tail_lines() のテストケース.
+    """
+
+    def test(self):
+        self.assertEqual('', tail_lines(0, ''))
+        self.assertEqual('', tail_lines(1, ''))
+
+        self.assertEqual('', tail_lines(0, 'aaa\nbbb\nccc'))
+        self.assertEqual('ccc', tail_lines(1, 'aaa\nbbb\nccc'))
+        self.assertEqual('bbb\nccc', tail_lines(2, 'aaa\nbbb\nccc'))
+        self.assertEqual('aaa\nbbb\nccc', tail_lines(3, 'aaa\nbbb\nccc'))
+        self.assertEqual('aaa\nbbb\nccc', tail_lines(4, 'aaa\nbbb\nccc'))
+
+
 def practice10():
     """ 10. 行数のカウント
 
@@ -276,6 +312,20 @@ def practice14():
     N = int(input())
     text = text_from_file('col1.txt')
     print(head_lines(N, text))
+
+
+def practice15():
+    """
+        15. 末尾のN行を出力
+
+        自然数 N をコマンドライン引数などの手段で受け取り,
+        入力のうち末尾の N 行だけを表示せよ.
+        確認には tail コマンドを用いよ.
+    """
+    print('N = ', end='')
+    N = int(input())
+    text = text_from_file('col1.txt')
+    print(tail_lines(N, text))
 
 
 def test():
