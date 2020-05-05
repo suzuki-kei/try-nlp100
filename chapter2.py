@@ -402,6 +402,24 @@ def practice16():
             file.write(chunks[i])
 
 
+def practice17():
+    """
+        17. 1 列目の文字列の異なり
+
+        1 列目の文字列の種類 (異なる文字列の集合) を求めよ.
+        確認には cut, sort, uniq コマンドを用いよ.
+
+        Examples
+        --------
+        >>> practice17()
+        136
+    """
+    text = text_from_file('popular-names.txt')
+    lines = text.splitlines()
+    names = [line.split()[0] for line in lines]
+    print(len(set(names)))
+
+
 def test():
     doctest.testmod()
     unittest.main()
