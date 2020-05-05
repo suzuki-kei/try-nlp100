@@ -11,6 +11,9 @@
     # 第 2 章で使用するファイルをダウンロードする.
     curl -o popular-names.txt https://nlp100.github.io/data/popular-names.txt
 
+    # 第 3 章で使用するファイルをダウンロードする.
+    curl https://nlp100.github.io/data/jawiki-country.json.gz | gunzip > jawiki-country.json
+
 ## 実行方法
 
 テストを実行するには `make test` とします.
