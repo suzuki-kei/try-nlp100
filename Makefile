@@ -4,9 +4,9 @@ PYTHON := python3
 .DEFAULT_GOAL := test
 
 test:
-	$(PYTHON) chapter1.py
-	$(PYTHON) chapter2.py
-	$(PYTHON) chapter3.py
+	$(PYTHON) -B chapter1.py
+	$(PYTHON) -B chapter2.py
+	$(PYTHON) -B chapter3.py
 
 # 実行されたルール名から章番号と課題番号を特定し, 変数に設定する.
 run\:%: \
