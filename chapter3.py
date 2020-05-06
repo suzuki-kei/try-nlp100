@@ -195,6 +195,20 @@ def practice23():
         print('{}) {}'.format(level, name))
 
 
+def practice24():
+    """
+        24. ファイル参照の抽出
+
+        記事から参照されているメディアファイルをすべて抜き出せ.
+    """
+    documents = _load_documents()
+    text = ''.join(texts_from_documents(documents))
+    pattern = re.compile(r'\[\[ファイル:(.+?)(:?\|.+)\]\]')
+
+    for name, _ in pattern.findall(text):
+        print(name)
+
+
 def test():
     doctest.testmod()
     unittest.main()
