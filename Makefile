@@ -6,6 +6,7 @@ PYTHON := python3
 test:
 	$(PYTHON) chapter1.py
 	$(PYTHON) chapter2.py
+	$(PYTHON) chapter3.py
 
 # 実行されたルール名から章番号と課題番号を特定し, 変数に設定する.
 run\:%: \
