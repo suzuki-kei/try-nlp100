@@ -115,6 +115,27 @@ def match_category_line(
     return pattern.fullmatch(line)
 
 
+def match_section_line(
+        line: str,
+    ) -> typing.Optional[re.Match]:
+    """
+        セクション行としてマッチさせる.
+
+        Arguments
+        ---------
+        line : str
+            行データ.
+
+        Returns
+        -------
+        typing.Optional[re.Match]
+            line がセクション行の場合はマッチ結果.
+            マッチしなかった場合は None.
+    """
+    pattern = re.compile(r'(?P<mark>=+) (.*) (?P=mark)')
+    return pattern.fullmatch(line)
+
+
 def practice20():
     """
         20. JSONデータの読み込み
@@ -152,6 +173,26 @@ def practice22():
     category_line_matches = filter(None, map(match_category_line, lines))
     category_names = map(lambda matched: matched[1], category_line_matches)
     print('\n'.join(sorted(set(category_names))))
+
+
+def practice23():
+    """
+        23. セクション構造
+
+        記事中に含まれるセクション名とそのレベル (例えば "== セクション名 =="
+        なら 1) を表示せよ.
+    """
+    documents = _load_documents()
+    lines = lines_from_documents(documents)
+    section_line_matches = filter(None, map(match_section_line, lines))
+    section_level_name_pairs = {
+        (len(match[1]), match[2])
+        for match in section_line_matches
+    }
+    sorted_section_level_name_pairs = sorted(
+        map(list, section_level_name_pairs), reverse=True)
+    for level, name in sorted_section_level_name_pairs:
+        print('{}) {}'.format(level, name))
 
 
 def test():
