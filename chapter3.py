@@ -35,7 +35,82 @@ def _load_documents():
     return list(documents)
 
 
-def match_category_line(line):
+def text_from_document(
+        document: dict,
+    ) -> str:
+    """
+        ドキュメントから本文を取り出す.
+
+        Arguments
+        ---------
+        document: dict
+            ドキュメント.
+
+        Returns
+        -------
+        text : str
+            ドキュメントの本文.
+    """
+    return document['text']
+
+
+def texts_from_documents(
+        documents: typing.List[dict],
+    ) -> typing.List[str]:
+    """
+        ドキュメントのリストを本文のリストに変換する.
+
+        Arguments
+        ---------
+        documents : typing.List[dict]
+            ドキュメントのリスト.
+
+        Returns
+        -------
+        texts : typing.List[str]
+            本文のリスト.
+    """
+    return list(map(text_from_document, documents))
+
+
+def lines_from_documents(
+        documents: typing.List[dict],
+    ) -> typing.List[str]:
+    """
+        ドキュメントのリストを本文の行リストに変換する.
+
+        Arguments
+        ---------
+        documents: typing.List[dict]
+            ドキュメントのリスト.
+
+        Returns
+        -------
+        各ドキュメントの本文を行リストに変換し,
+        それをフラットに連結した 1 次元のリスト.
+    """
+    texts = texts_from_documents(documents)
+    lines = itertools.chain(*map(str.splitlines, texts))
+    return list(lines)
+
+
+def match_category_line(
+        line: str,
+    ) -> typing.Optional[re.Match]:
+    """
+        カテゴリ行としてマッチさせる.
+
+        Arguments
+        ---------
+        line : str
+            行データ.
+
+        Returns
+        -------
+        typing.Optional[re.Match]
+            line がカテゴリ行の場合はマッチ結果.
+            マッチしなかった場合は None.
+    """
     pattern = re.compile('\[\[Category:(.+?)(:?\|.+)?\]\]')
     return pattern.fullmatch(line)
 
@@ -61,9 +136,7 @@ def practice21():
         記事中でカテゴリ名を宣言している行を抽出せよ.
     """
     documents = _load_documents()
-    text_from_document = lambda document: document['text']
-    texts = map(text_from_document, documents)
-    lines = itertools.chain(*map(str.splitlines, texts))
+    lines = lines_from_documents(documents)
     category_lines = filter(match_category_line, lines)
     print('\n'.join(sorted(set(category_lines))))
 
@@ -75,12 +148,9 @@ def practice22():
         記事のカテゴリ名を (行単位ではなく名前で) 抽出せよ.
     """
     documents = _load_documents()
-    text_from_document = lambda document: document['text']
-    texts = map(text_from_document, documents)
-    lines = itertools.chain(*map(str.splitlines, texts))
-    category_lines = filter(match_category_line, lines)
-    to_category_name = lambda line: match_category_line(line)[1]
-    category_names = map(to_category_name, category_lines)
+    lines = lines_from_documents(documents)
+    category_line_matches = filter(None, map(match_category_line, lines))
+    category_names = map(lambda matched: matched[1], category_line_matches)
     print('\n'.join(sorted(set(category_names))))
 
 
