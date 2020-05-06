@@ -21,6 +21,14 @@ def _load_documents():
         typing.List[dict]
             本性で扱うドキュメント.
             キーに 'title', 'text' を持つ dict のリスト.
+
+        Examples
+        --------
+        >>> documents = _load_documents()
+        >>> documents[0]['title']
+        'エジプト'
+        >>> documents[0]['text'][:40]
+        '{{otheruses|主に現代のエジプト・アラブ共和国|古代|古代エジプト}}'
     """
     text = text_from_file('jawiki-country.json')
     documents = map(json.loads, text.splitlines())
