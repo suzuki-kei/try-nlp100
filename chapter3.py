@@ -8,6 +8,7 @@ import doctest
 import itertools
 import json
 import re
+import regex
 import typing
 import unittest
 
@@ -207,6 +208,59 @@ def practice24():
 
     for name, _ in pattern.findall(text):
         print(name)
+
+
+def practice25():
+    """
+        25. テンプレートの抽出
+
+        記事中に含まれる「基礎情報」テンプレートのフィールド名と値を抽出し,
+        辞書オブジェクトとして格納せよ.
+    """
+    documents = _load_documents()
+
+    for document in documents:
+        basic_information = basic_information_from_text(document['text'])
+        print('==== {}'.format(document['title']))
+        print(basic_information)
+
+
+def basic_information_from_text(
+        text: str,
+    ) -> typing.Dict[str, typing.Dict[str, str]]:
+    """
+        テキストから基礎情報を抽出する.
+
+        Arguments
+        ---------
+        text : str
+            テキスト.
+
+        Returns
+        -------
+        basic_information : typing.Dict[str, typing.Dict[str, str]]
+            キーに基礎情報の名称, 値に基礎情報のプロパティ情報.
+            プロパティ情報はキーがプロパティ名, 値がプロパティ値である辞書.
+    """
+    # '|key=value' にマッチするパターン.
+    properties_text_pattern = \
+        re.compile(r'\| *([^=]+?) *= *(.*(?:\n(?!\|?}}).+)*)')
+
+    # '{{基礎情報 <name> ...}}' にマッチするパターン.
+    # NOTE: 再帰的マッチを行うため re ではなく regex を使用する.
+    basic_information_pattern = \
+        regex.compile(r'(?={{基礎情報 (.+)\n)(?P<_>{(?:[^{}]+|(?&_))*})')
+
+    def properties_from_basic_information_text(basic_information_text):
+        pattern = re.compile(r'\A{{基礎情報 .+\n|}}\Z')
+        properties_text = pattern.sub('', basic_information_text)
+        return dict(properties_text_pattern.findall(properties_text))
+
+    return {
+        name: properties_from_basic_information_text(basic_information_text)
+        for name, basic_information_text
+        in basic_information_pattern.findall(text)
+    }
 
 
 def test():
