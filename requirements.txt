@@ -1,2 +1,3 @@
 regex == 2020.5.7
+parameterized == 0.7.4
 

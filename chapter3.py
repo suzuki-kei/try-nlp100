@@ -7,6 +7,7 @@ from chapter2 import text_from_file
 import doctest
 import itertools
 import json
+import parameterized
 import re
 import regex
 import typing
@@ -138,6 +139,90 @@ def match_section_line(
     return pattern.fullmatch(line)
 
 
+# '|key=value' にマッチするパターン.
+PROPERTIES_TEXT_PATTERN = \
+    re.compile(r'^ *\| *([^=]+?) *= *(.*) *', re.M)
+
+
+class PropertiesTextPatternTestCase(unittest.TestCase):
+    """
+        PROPERTIES_TEXT_PATTERN のテストケース.
+    """
+
+    @parameterized.parameterized.expand([
+        ('_イラク.txt', 44),
+        ('_カンボジア.txt', 44),
+        ('_マレーシア.txt', 46),
+        ('_セントクリストファー・ネイビス.txt', 43),
+    ])
+    def test(self, file_path, property_count):
+        text = text_from_file(file_path)
+        matches = BASIC_INFORMATION_PATTERN.findall(text)
+        basic_information_text = matches[0][1]
+        pattern = re.compile(r'\A{{基礎情報 .+\n|}}\Z')
+
+        properties_text = pattern.sub('', basic_information_text)
+        properties = dict(PROPERTIES_TEXT_PATTERN.findall(properties_text))
+        self.assertEqual(property_count, len(properties))
+
+
+# '{{基礎情報 <name> ...}}' にマッチするパターン.
+# NOTE: 再帰的マッチを行うため re ではなく regex を使用する.
+BASIC_INFORMATION_PATTERN = \
+    regex.compile(r'(?={{基礎情報 (.+)\n)(?P<_>{(?:[^{}]+|(?&_))*})')
+
+
+class BasicInformationPatternTestCase(unittest.TestCase):
+    """
+        BASIC_INFORMATION_PATTERN のテストケース.
+    """
+
+    @parameterized.parameterized.expand([
+        '_イラク.txt',
+        '_カンボジア.txt',
+        '_マレーシア.txt',
+        '_セントクリストファー・ネイビス.txt',
+    ])
+    def test(self, file_path):
+        text = text_from_file(file_path)
+        matches = BASIC_INFORMATION_PATTERN.findall(text)
+        self.assertEqual(1, len(matches))
+        match = matches[0]
+        self.assertEqual(2, len(match))
+        self.assertEqual('国', match[0])
+        self.assertTrue(match[1].startswith('{{基礎情報'))
+        self.assertTrue(match[1].endswith('}}'))
+
+
+def basic_information_from_text(
+        text: str,
+    ) -> typing.Dict[str, typing.Dict[str, str]]:
+    """
+        テキストから基礎情報を抽出する.
+
+        Arguments
+        ---------
+        text : str
+            テキスト.
+
+        Returns
+        -------
+        basic_information : typing.Dict[str, typing.Dict[str, str]]
+            キーに基礎情報の名称, 値に基礎情報のプロパティ情報.
+            プロパティ情報はキーがプロパティ名, 値がプロパティ値である辞書.
+    """
+    def properties_from_basic_information_text(basic_information_text):
+        pattern = re.compile(r'\A{{基礎情報 .+\n|}}\Z')
+        properties_text = pattern.sub('', basic_information_text)
+        return dict(PROPERTIES_TEXT_PATTERN.findall(properties_text))
+
+    return {
+        name: properties_from_basic_information_text(basic_information_text)
+        for name, basic_information_text
+        in BASIC_INFORMATION_PATTERN.findall(text)
+    }
+
+
 def practice20():
     """
         20. JSONデータの読み込み
@@ -224,44 +309,6 @@ def practice25():
         basic_information = basic_information_from_text(document['text'])
         print('==== {}'.format(document['title']))
         print(basic_information)
-
-
-def basic_information_from_text(
-        text: str,
-    ) -> typing.Dict[str, typing.Dict[str, str]]:
-    """
-        テキストから基礎情報を抽出する.
-
-        Arguments
-        ---------
-        text : str
-            テキスト.
-
-        Returns
-        -------
-        basic_information : typing.Dict[str, typing.Dict[str, str]]
-            キーに基礎情報の名称, 値に基礎情報のプロパティ情報.
-            プロパティ情報はキーがプロパティ名, 値がプロパティ値である辞書.
-    """
-    # '|key=value' にマッチするパターン.
-    properties_text_pattern = \
-        re.compile(r'\| *([^=]+?) *= *(.*(?:\n(?!\|?}}).+)*)')
-
-    # '{{基礎情報 <name> ...}}' にマッチするパターン.
-    # NOTE: 再帰的マッチを行うため re ではなく regex を使用する.
-    basic_information_pattern = \
-        regex.compile(r'(?={{基礎情報 (.+)\n)(?P<_>{(?:[^{}]+|(?&_))*})')
-
-    def properties_from_basic_information_text(basic_information_text):
-        pattern = re.compile(r'\A{{基礎情報 .+\n|}}\Z')
-        properties_text = pattern.sub('', basic_information_text)
-        return dict(properties_text_pattern.findall(properties_text))
-
-    return {
-        name: properties_from_basic_information_text(basic_information_text)
-        for name, basic_information_text
-        in basic_information_pattern.findall(text)
-    }
 
 
 def test():
