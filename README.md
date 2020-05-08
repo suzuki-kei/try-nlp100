@@ -15,10 +15,10 @@
     pip install -r requirements.txt
 
     # 第 2 章で使用するファイルをダウンロードする.
-    curl -o popular-names.txt https://nlp100.github.io/data/popular-names.txt
+    curl -o data/chapter2/popular-names.txt https://nlp100.github.io/data/popular-names.txt
 
     # 第 3 章で使用するファイルをダウンロードする.
-    curl https://nlp100.github.io/data/jawiki-country.json.gz | gunzip > jawiki-country.json
+    curl https://nlp100.github.io/data/jawiki-country.json.gz | gunzip > data/chapter3/jawiki-country.json
 
 ## 実行方法
 

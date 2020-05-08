@@ -244,7 +244,7 @@ def practice10():
         >>> practice10()
         2780
     """
-    text = text_from_file('popular-names.txt')
+    text = text_from_file('data/chapter2/popular-names.txt')
     print(count_lines(text))
 
 
@@ -255,7 +255,7 @@ def practice11():
         タブ 1 文字につきスペース 1 文字に置換せよ. 確認には sed コマンド, tr
         コマンド, もしくは expand コマンドを用いよ.
     """
-    text = text_from_file('popular-names.txt')
+    text = text_from_file('data/chapter2/popular-names.txt')
     print(expand_tab(text, 1))
 
 
@@ -282,11 +282,11 @@ def practice12():
         各行の 1 列目だけを抜き出したものを col1.txt に, 2 列目だけを抜き出した
         ものを col2.txt としてファイルに保存せよ. 確認には cut コマンドを用いよ.
     """
-    text = text_from_file('popular-names.txt')
+    text = text_from_file('data/chapter2/popular-names.txt')
     lines = text.splitlines()
 
-    with open('col1.txt', 'w') as col1_file, \
-         open('col2.txt', 'w') as col2_file:
+    with open('data/chapter2/col1.txt', 'w') as col1_file, \
+         open('data/chapter2/col2.txt', 'w') as col2_file:
         for line in lines:
             columns = line.split('\t')
             col1_file.write(columns[0] + '\n')
@@ -301,7 +301,7 @@ class practice12TestCase(unittest.TestCase):
     def test(self):
         practice12()
 
-        col1_lines = text_from_file('col1.txt').splitlines()
+        col1_lines = text_from_file('data/chapter2/col1.txt').splitlines()
         self.assertEqual('Mary', col1_lines[0])
         self.assertEqual('Anna', col1_lines[1])
         self.assertEqual('Emma', col1_lines[2])
@@ -309,7 +309,7 @@ class practice12TestCase(unittest.TestCase):
         self.assertEqual('Mason', col1_lines[-2])
         self.assertEqual('Logan', col1_lines[-1])
 
-        col2_lines = text_from_file('col2.txt').splitlines()
+        col2_lines = text_from_file('data/chapter2/col2.txt').splitlines()
         self.assertEqual('F', col2_lines[0])
         self.assertEqual('F', col2_lines[1])
         self.assertEqual('F', col2_lines[2])
@@ -326,8 +326,8 @@ def practice13():
         目をタブ区切りで並べたテキストファイルを作成せよ. 確認には paste コマン
         ドを用いよ.
     """
-    col1_lines = text_from_file('col1.txt').splitlines()
-    col2_lines = text_from_file('col2.txt').splitlines()
+    col1_lines = text_from_file('data/chapter2/col1.txt').splitlines()
+    col2_lines = text_from_file('data/chapter2/col2.txt').splitlines()
 
     for values in zip(col1_lines, col2_lines):
         print('\t'.join(values))
@@ -357,7 +357,7 @@ def practice14():
     """
     print('N = ', end='')
     N = int(input())
-    text = text_from_file('col1.txt')
+    text = text_from_file('data/chapter2/col1.txt')
     print(head_lines(N, text))
 
 
@@ -371,7 +371,7 @@ def practice15():
     """
     print('N = ', end='')
     N = int(input())
-    text = text_from_file('col1.txt')
+    text = text_from_file('data/chapter2/col1.txt')
     print(tail_lines(N, text))
 
 
@@ -385,7 +385,7 @@ def practice16():
     """
     print('N = ', end='')
     N = int(input())
-    input_file_path = './popular-names.txt'
+    input_file_path = 'data/chapter2/popular-names.txt'
     text = text_from_file(input_file_path)
     chunks = to_chunks(N, text)
 
@@ -414,7 +414,7 @@ def practice17():
         >>> practice17()
         136
     """
-    text = text_from_file('popular-names.txt')
+    text = text_from_file('data/chapter2/popular-names.txt')
     lines = text.splitlines()
     names = [line.split()[0] for line in lines]
     print(len(set(names)))
@@ -428,7 +428,7 @@ def practice18():
         び替えよ). 確認には sort コマンドを用いよ (この問題はコマンドで実行した
         時の結果と合わなくてもよい).
     """
-    text = text_from_file('popular-names.txt')
+    text = text_from_file('data/chapter2/popular-names.txt')
     lines = text.splitlines()
     to_key = lambda line: int(line.split()[2])
     sorted_lines = sorted(lines, key=to_key, reverse=True)
@@ -439,7 +439,7 @@ def practice19():
     """
         19. 各行の 1 コラム目の文字列の出現頻度を求め, 出現頻度の高い順に並べる.
     """
-    text = text_from_file('popular-names.txt')
+    text = text_from_file('data/chapter2/popular-names.txt')
     lines = text.splitlines()
     values = [line.split()[0] for line in lines]
     histogram = to_histogram(values)

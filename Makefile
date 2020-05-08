@@ -16,7 +16,7 @@ run\:%: \
 	practice_name = practice$(practice_no)
 
 run\:%.sh:
-	@(source $(chapter_name).sh && $(practice_name))
+	@(source $(chapter_name).sh && cd data/chapter2 && $(practice_name))
 
 run\:%:
 	$(PYTHON) -B run.py --chapter=$(chapter_no) --practice=$(practice_no)

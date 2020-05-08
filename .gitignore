@@ -5,9 +5,7 @@
 /virtualenv/
 
 # temporary files
-popular-names.txt
-popular-names.*.txt
-col1.txt
-col2.txt
-jawiki-country.json
+/data/chapter2/col1.txt
+/data/chapter2/col2.txt
+/data/chapter2/popular-names.*.txt
 

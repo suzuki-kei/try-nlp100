@@ -32,7 +32,7 @@ def _load_documents() -> typing.List[dict]:
         >>> documents[0]['text'][:40]
         '{{otheruses|主に現代のエジプト・アラブ共和国|古代|古代エジプト}}'
     """
-    text = text_from_file('jawiki-country.json')
+    text = text_from_file('data/chapter3/jawiki-country.json')
     documents = map(json.loads, text.splitlines())
     return list(documents)
 
@@ -150,10 +150,10 @@ class PropertiesTextPatternTestCase(unittest.TestCase):
     """
 
     @parameterized.parameterized.expand([
-        ('_イラク.txt', 44),
-        ('_カンボジア.txt', 44),
-        ('_マレーシア.txt', 46),
-        ('_セントクリストファー・ネイビス.txt', 43),
+        ('data/chapter3/jawiki-country.イラク.txt', 44),
+        ('data/chapter3/jawiki-country.カンボジア.txt', 44),
+        ('data/chapter3/jawiki-country.マレーシア.txt', 46),
+        ('data/chapter3/jawiki-country.セントクリストファー・ネイビス.txt', 43),
     ])
     def test(self, file_path, property_count):
         text = text_from_file(file_path)
@@ -178,10 +178,10 @@ class BasicInformationPatternTestCase(unittest.TestCase):
     """
 
     @parameterized.parameterized.expand([
-        '_イラク.txt',
-        '_カンボジア.txt',
-        '_マレーシア.txt',
-        '_セントクリストファー・ネイビス.txt',
+        'data/chapter3/jawiki-country.イラク.txt',
+        'data/chapter3/jawiki-country.カンボジア.txt',
+        'data/chapter3/jawiki-country.マレーシア.txt',
+        'data/chapter3/jawiki-country.セントクリストファー・ネイビス.txt',
     ])
     def test(self, file_path):
         text = text_from_file(file_path)
