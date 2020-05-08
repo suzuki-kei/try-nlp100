@@ -87,6 +87,7 @@ def lines_from_documents(
 
         Returns
         -------
+        lines : typing.List[str]
         各ドキュメントの本文を行リストに変換し,
         それをフラットに連結した 1 次元のリスト.
     """
