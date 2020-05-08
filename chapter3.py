@@ -13,7 +13,7 @@ import typing
 import unittest
 
 
-def _load_documents():
+def _load_documents() -> typing.List[dict]:
     """
         本章で扱うドキュメントをロードする.
 
