@@ -223,6 +223,85 @@ def basic_information_from_text(
     }
 
 
+def print_basic_information(
+        basic_information: typing.Dict[str, typing.Dict[str, str]],
+        indent: str='    ',
+    ) -> None:
+    """
+        基礎情報を含む辞書を表示する.
+
+        Arguments
+        ---------
+        basic_information : typing.Dict[str, typing.Dict[str, str]
+            基礎情報を含む辞書.
+        indent: str
+            インデントに使用する文字列.
+    """
+    print('基礎情報')
+
+    if not basic_information:
+        print('{}{}'.format(indent * 1, 'None'))
+        return
+
+    for name, properties in basic_information.items():
+        print('{}{}'.format(indent * 1, name))
+        for key, value in properties.items():
+            print('{}{} = {}'.format(indent * 2, key, value))
+
+
+def remove_enphasis(
+        text: str
+    ) -> str:
+    """
+        テキスト中の強調マークアップを除去する.
+
+        Arguments
+        ---------
+        text : str
+            テキスト.
+
+        Returns
+        -------
+        str
+            強調マークアップを除去したテキスト.
+    """
+    pattern = re.compile(r'(<[^>]+>|{[^}]+})|(?P<mark>"{1,3})([^"]+)(?P=mark)')
+    return pattern.sub('\\1\\3', text)
+
+
+class RemoveEnphasisTestCase(unittest.TestCase):
+    """
+        remove_enphasis() のテストケース.
+    """
+
+    def test(self):
+        # 空文字列を渡した場合.
+        self.assertEqual('', remove_enphasis(''))
+
+        # 強調マークアップを含まない場合.
+        self.assertEqual('abc', remove_enphasis('abc'))
+
+        # 強調マークアップを含む場合.
+        self.assertEqual(
+            '0: zero, 1: one, 2: two, 3: three',
+            remove_enphasis('0: zero, 1: "one", 2: ""two"", 3: """three"""'))
+
+        # 強調マークアップ以外のマークアップを含む場合.
+        self.assertEqual(
+            '[http://www.example.com 外部リンク]',
+            remove_enphasis('[http://www.example.com 外部リンク]'))
+
+        # タグを含む場合.
+        self.assertEqual(
+            '注記 = <references group="注"/>註1: 人口、及び各種GDPの数値',
+            remove_enphasis('注記 = <references group="注"/>註1: 人口、及び各種GDPの数値'))
+
+        # テンプレートを含む場合.
+        self.assertEqual(
+            '注記 = {{Reflist|group="注釈"}}',
+            remove_enphasis('注記 = {{Reflist|group="注釈"}}'))
+
+
 def practice20():
     """
         20. JSONデータの読み込み
@@ -306,9 +385,31 @@ def practice25():
     documents = _load_documents()
 
     for document in documents:
-        basic_information = basic_information_from_text(document['text'])
-        print('==== {}'.format(document['title']))
-        print(basic_information)
+        title, text = document['title'], document['text']
+        print('==== {}'.format(title))
+        basic_information = basic_information_from_text(text)
+        print_basic_information(basic_information)
+
+
+def practice26():
+    """
+        26. 強調マークアップの除去
+
+        25 の処理時に, テンプレートの値から MediaWiki の強調マークアップ (弱い
+        強調, 強調, 強い強調のすべて) を除去してテキストに変換せよ (参考: マー
+        クアップ早見表).
+
+         * マークアップ早見表
+           https://ja.wikipedia.org/wiki/Help:%E6%97%A9%E8%A6%8B%E8%A1%A8
+    """
+    documents = _load_documents()
+
+    for document in documents:
+        title, text = document['title'], document['text']
+        print('==== {}'.format(title))
+        text = remove_enphasis(document['text'])
+        basic_information = basic_information_from_text(text)
+        print_basic_information(basic_information)
 
 
 def test():
