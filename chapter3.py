@@ -276,30 +276,131 @@ class RemoveEnphasisTestCase(unittest.TestCase):
 
     def test(self):
         # 空文字列を渡した場合.
-        self.assertEqual('', remove_enphasis(''))
+        text = ''
+        expected = text
+        self.assertEqual(expected, remove_enphasis(text))
 
-        # 強調マークアップを含まない場合.
-        self.assertEqual('abc', remove_enphasis('abc'))
+        # マークアップを含まない場合.
+        text = 'abc'
+        expected = text
+        self.assertEqual(expected, remove_enphasis(text))
 
         # 強調マークアップを含む場合.
-        self.assertEqual(
-            '0: zero, 1: one, 2: two, 3: three',
-            remove_enphasis('0: zero, 1: "one", 2: ""two"", 3: """three"""'))
+        text = '0: zero, 1: "one", 2: ""two"", 3: """three"""'
+        expected = '0: zero, 1: one, 2: two, 3: three'
+        self.assertEqual(expected, remove_enphasis(text))
 
-        # 強調マークアップ以外のマークアップを含む場合.
-        self.assertEqual(
-            '[http://www.example.com 外部リンク]',
-            remove_enphasis('[http://www.example.com 外部リンク]'))
+        # 内部リンクを含む場合.
+        text = 'aaa [[記事名]] bbb [[記事名|表示文字]] ccc [[記事名#節名|表示文字]] ddd'
+        expected = text
+        self.assertEqual(expected, remove_enphasis(text))
+
+        # 外部リンクを含む場合.
+        text = '[http://www.example.com 外部リンク]'
+        expected = text
+        self.assertEqual(expected, remove_enphasis(text))
 
         # タグを含む場合.
-        self.assertEqual(
-            '注記 = <references group="注"/>註1: 人口、及び各種GDPの数値',
-            remove_enphasis('注記 = <references group="注"/>註1: 人口、及び各種GDPの数値'))
+        text = '注記 = <references group="注"/>註1: 人口、及び各種GDPの数値'
+        expected = text
+        self.assertEqual(expected, remove_enphasis(text))
 
         # テンプレートを含む場合.
-        self.assertEqual(
-            '注記 = {{Reflist|group="注釈"}}',
-            remove_enphasis('注記 = {{Reflist|group="注釈"}}'))
+        text = '注記 = {{Reflist|group="注釈"}}'
+        expected = text
+        self.assertEqual(expected, remove_enphasis(text))
+
+        # ファイルを含む場合.
+        text = '[[ファイル:Wikipedia-logo-v2-ja.png|thumb|説明文]]'
+        expected = text
+        self.assertEqual(expected, remove_enphasis(text))
+
+        # ファイルを含む場合.
+        text = '[[File:Wikipedia-logo-v2-ja.png|thumb|説明文]]'
+        expected = text
+        self.assertEqual(expected, remove_enphasis(text))
+
+        # カテゴリを含む場合.
+        text = '[[Category:ヘルプ|はやみひよう]]'
+        expected = text
+        self.assertEqual(expected, remove_enphasis(text))
+
+
+def remove_internal_links(
+        text: str,
+    ) -> str:
+    """
+        テキスト中の内部リンクを除去する.
+
+        Arguments
+        ---------
+        text : str
+            テキスト.
+
+        Returns
+        -------
+        str
+            内部リンクを除去したテキスト.
+    """
+    pattern = re.compile(r'\[\[(?!ファイル:|File:|Category:|]]).+?]]')
+    return pattern.sub('', text)
+
+
+class RemoveInternalLinksTestCase(unittest.TestCase):
+    """
+        remove_internal_links() のテストケース.
+    """
+
+    def test(self):
+        # 空文字列を渡した場合.
+        text = ''
+        expected = text
+        self.assertEqual(expected, remove_internal_links(text))
+
+        # マークアップを含まない場合.
+        text = 'abc'
+        expected = text
+        self.assertEqual(expected, remove_internal_links(text))
+
+        # 強調マークアップを含む場合.
+        text = '0: zero, 1: "one", 2: ""two"", 3: """three"""'
+        expected = text
+        self.assertEqual(expected, remove_internal_links(text))
+
+        # 内部リンクを含む場合.
+        text = 'aaa [[記事名]] bbb [[記事名|表示文字]] ccc [[記事名#節名|表示文字]] ddd'
+        expected = 'aaa  bbb  ccc  ddd'
+        self.assertEqual(expected, remove_internal_links(text))
+
+        # 外部リンクを含む場合.
+        text = '[http://www.example.com 外部リンク]'
+        expected = text
+        self.assertEqual(expected, remove_internal_links(text))
+
+        # タグを含む場合.
+        text = '注記 = <references group="注"/>註1: 人口、及び各種GDPの数値'
+        expected = text
+        self.assertEqual(expected, remove_internal_links(text))
+
+        # テンプレートを含む場合.
+        text = '注記 = {{Reflist|group="注釈"}}'
+        expected = text
+        self.assertEqual(expected, remove_internal_links(text))
+
+        # ファイルを含む場合.
+        text = '[[ファイル:Wikipedia-logo-v2-ja.png|thumb|説明文]]'
+        expected = text
+        self.assertEqual(expected, remove_internal_links(text))
+
+        # ファイルを含む場合.
+        text = '[[File:Wikipedia-logo-v2-ja.png|thumb|説明文]]'
+        expected = text
+        self.assertEqual(expected, remove_internal_links(text))
+
+        # カテゴリを含む場合.
+        text = '[[Category:ヘルプ|はやみひよう]]'
+        expected = text
+        self.assertEqual(expected, remove_internal_links(text))
 
 
 def practice20():
@@ -408,6 +509,27 @@ def practice26():
         title, text = document['title'], document['text']
         print('==== {}'.format(title))
         text = remove_enphasis(text)
+        basic_information = basic_information_from_text(text)
+        print_basic_information(basic_information)
+
+
+def practice27():
+    """
+        27. 内部リンクの除去
+
+        26 の処理に加えて, テンプレートの値から MediaWiki の内部リンクマークア
+        ップを除去し, テキストに変換せよ (参考: マークアップ早見表).
+
+         * マークアップ早見表
+           https://ja.wikipedia.org/wiki/Help:%E6%97%A9%E8%A6%8B%E8%A1%A8
+    """
+    documents = _load_documents()
+
+    for document in documents:
+        title, text = document['title'], document['text']
+        print('==== {}'.format(title))
+        text = remove_enphasis(text)
+        text = remove_internal_links(text)
         basic_information = basic_information_from_text(text)
         print_basic_information(basic_information)
 
