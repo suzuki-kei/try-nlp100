@@ -407,7 +407,7 @@ def practice26():
     for document in documents:
         title, text = document['title'], document['text']
         print('==== {}'.format(title))
-        text = remove_enphasis(document['text'])
+        text = remove_enphasis(text)
         basic_information = basic_information_from_text(text)
         print_basic_information(basic_information)
 
