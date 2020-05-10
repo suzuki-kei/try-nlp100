@@ -249,11 +249,11 @@ def print_basic_information(
             print('{}{} = {}'.format(indent * 2, key, value))
 
 
-def remove_enphasis(
-        text: str
+def markdown_enphasis(
+        text: str,
     ) -> str:
     """
-        テキスト中の強調マークアップを除去する.
+        MediaWiki の強調マークアップを通常テキストに置換する.
 
         Arguments
         ---------
@@ -263,67 +263,76 @@ def remove_enphasis(
         Returns
         -------
         str
-            強調マークアップを除去したテキスト.
+            強調マークアップを通常テキストに置換した文字列.
+
+        Examples
+        --------
+        >>> markdown_enphasis('aaa "bbb" ccc')
+        'aaa bbb ccc'
+        >>> markdown_enphasis('aaa ""bbb"" ccc')
+        'aaa bbb ccc'
+        >>> markdown_enphasis('aaa \"\"\"bbb\"\"\" ccc')
+        'aaa bbb ccc'
     """
     pattern = re.compile(r'(<[^>]+>|{[^}]+})|(?P<mark>"{1,3})([^"]+)(?P=mark)')
     return pattern.sub('\\1\\3', text)
 
 
-class RemoveEnphasisTestCase(unittest.TestCase):
+class MarkdownEnphasisTestCase(unittest.TestCase):
     """
-        remove_enphasis() のテストケース.
+        markdown_enphasis() のテストケース.
     """
 
     def test(self):
         # 空文字列を渡した場合.
         text = ''
         expected = text
-        self.assertEqual(expected, remove_enphasis(text))
+        self.assertEqual(expected, markdown_enphasis(text))
 
         # マークアップを含まない場合.
         text = 'abc'
         expected = text
-        self.assertEqual(expected, remove_enphasis(text))
+        self.assertEqual(expected, markdown_enphasis(text))
 
         # 強調マークアップを含む場合.
         text = '0: zero, 1: "one", 2: ""two"", 3: """three"""'
         expected = '0: zero, 1: one, 2: two, 3: three'
-        self.assertEqual(expected, remove_enphasis(text))
+        self.assertEqual(expected, markdown_enphasis(text))
 
         # 内部リンクを含む場合.
         text = 'aaa [[記事名]] bbb [[記事名#節名]] ccc [[記事名|表示文字]] ddd [[記事名#節名|表示文字]] eee'
         expected = text
-        self.assertEqual(expected, remove_enphasis(text))
+        self.assertEqual(expected, markdown_enphasis(text))
 
         # 外部リンクを含む場合.
         text = '[http://www.example.com 外部リンク]'
         expected = text
-        self.assertEqual(expected, remove_enphasis(text))
+        self.assertEqual(expected, markdown_enphasis(text))
 
         # タグを含む場合.
         text = '注記 = <references group="注"/>註1: 人口、及び各種GDPの数値'
         expected = text
-        self.assertEqual(expected, remove_enphasis(text))
+        self.assertEqual(expected, markdown_enphasis(text))
 
         # テンプレートを含む場合.
         text = '注記 = {{Reflist|group="注釈"}}'
         expected = text
-        self.assertEqual(expected, remove_enphasis(text))
+        self.assertEqual(expected, markdown_enphasis(text))
 
         # ファイルを含む場合.
         text = '[[ファイル:Wikipedia-logo-v2-ja.png|thumb|説明文]]'
         expected = text
-        self.assertEqual(expected, remove_enphasis(text))
+        self.assertEqual(expected, markdown_enphasis(text))
 
         # ファイルを含む場合.
         text = '[[File:Wikipedia-logo-v2-ja.png|thumb|説明文]]'
         expected = text
-        self.assertEqual(expected, remove_enphasis(text))
+        self.assertEqual(expected, markdown_enphasis(text))
 
         # カテゴリを含む場合.
         text = '[[Category:ヘルプ|はやみひよう]]'
         expected = text
-        self.assertEqual(expected, remove_enphasis(text))
+        self.assertEqual(expected, markdown_enphasis(text))
 
 
 def remove_internal_links(
@@ -508,7 +517,7 @@ def practice26():
     for document in documents:
         title, text = document['title'], document['text']
         print('==== {}'.format(title))
-        text = remove_enphasis(text)
+        text = markdown_enphasis(text)
         basic_information = basic_information_from_text(text)
         print_basic_information(basic_information)
 
@@ -528,7 +537,7 @@ def practice27():
     for document in documents:
         title, text = document['title'], document['text']
         print('==== {}'.format(title))
-        text = remove_enphasis(text)
+        text = markdown_enphasis(text)
         text = remove_internal_links(text)
         basic_information = basic_information_from_text(text)
         print_basic_information(basic_information)
