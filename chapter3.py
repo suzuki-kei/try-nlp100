@@ -291,7 +291,7 @@ class RemoveEnphasisTestCase(unittest.TestCase):
         self.assertEqual(expected, remove_enphasis(text))
 
         # 内部リンクを含む場合.
-        text = 'aaa [[記事名]] bbb [[記事名|表示文字]] ccc [[記事名#節名|表示文字]] ddd'
+        text = 'aaa [[記事名]] bbb [[記事名#節名]] ccc [[記事名|表示文字]] ddd [[記事名#節名|表示文字]] eee'
         expected = text
         self.assertEqual(expected, remove_enphasis(text))
 
@@ -342,8 +342,8 @@ def remove_internal_links(
         str
             内部リンクを除去したテキスト.
     """
-    pattern = re.compile(r'\[\[(?!ファイル:|File:|Category:|]]).+?]]')
-    return pattern.sub('', text)
+    pattern = re.compile(r'\[\[(?!ファイル:|File:|Category:|]])(?:[^|\]]+\|([^\]]+?)|([^\]]+?))]]')
+    return pattern.sub('\\1\\2', text)
 
 
 class RemoveInternalLinksTestCase(unittest.TestCase):
@@ -368,8 +368,8 @@ class RemoveInternalLinksTestCase(unittest.TestCase):
         self.assertEqual(expected, remove_internal_links(text))
 
         # 内部リンクを含む場合.
-        text = 'aaa [[記事名]] bbb [[記事名|表示文字]] ccc [[記事名#節名|表示文字]] ddd'
-        expected = 'aaa  bbb  ccc  ddd'
+        text = 'aaa [[記事名]] bbb [[記事名#節名]] ccc [[記事名|表示文字]] ddd [[記事名#節名|表示文字]] eee'
+        expected = 'aaa 記事名 bbb 記事名#節名 ccc 表示文字 ddd 表示文字 eee'
         self.assertEqual(expected, remove_internal_links(text))
 
         # 外部リンクを含む場合.
