@@ -2,9 +2,9 @@
 .DEFAULT_GOAL := test
 
 test:
-	python -B chapter1.py
-	python -B chapter2.py
-	python -B chapter3.py
+	python -B src/chapter1.py
+	python -B src/chapter2.py
+	python -B src/chapter3.py
 
 # 実行されたルール名から章番号と課題番号を特定し, 変数に設定する.
 run\:%: \
@@ -14,8 +14,8 @@ run\:%: \
 	practice_name = practice$(practice_no)
 
 run\:%.sh:
-	@(source $(chapter_name).sh && cd data/chapter2 && $(practice_name))
+	@(source src/$(chapter_name).sh && cd data/chapter2 && $(practice_name))
 
 run\:%:
-	python -B run.py --chapter=$(chapter_no) --practice=$(practice_no)
+	python -B src/run.py --chapter=$(chapter_no) --practice=$(practice_no)
 
