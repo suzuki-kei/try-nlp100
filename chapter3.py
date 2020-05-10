@@ -11,6 +11,7 @@ import json
 import parameterized
 import re
 import regex
+import requests
 import typing
 import unittest
 
@@ -522,6 +523,38 @@ class MarkdownTestCase(unittest.TestCase):
     # TODO テストを書く.
 
 
+def country_flag_image_file_url_from_basic_information(
+        basic_information: typing.Dict[str, typing.Dict[str, str]],
+    ) -> typing.Optional[str]:
+    """
+        基礎情報から国旗画像の URL を取得する.
+
+        Arguments
+        ---------
+        basic_information : typing.Dict[str, typing.Dict[str, str]]
+            基礎情報.
+
+        Returns
+        -------
+        country_flag_image_url : typing.Optional[str]
+            国旗画像の URL.
+    """
+    try:
+        file_name = basic_information['国']['国旗画像']
+        return requests.get('https://www.mediawiki.org/w/api.php', {
+            'action': 'query',
+            'format': 'json',
+            'prop': 'imageinfo',
+            'iiprop': 'url',
+            'titles': 'File:{}'.format(file_name),
+        }).json()['query']['pages']['-1']['imageinfo'][0]['url']
+    except (KeyError, IndexError) as exception:
+        # 以下のいずれかの場合にここを通る:
+        #  * 基礎情報に国旗画像の項目が含まれない場合.
+        #  * レスポンスに画像の URL が含まれない場合.
+        return None
+
+
 def practice20():
     """
         20. JSONデータの読み込み
@@ -668,6 +701,37 @@ def practice28():
         text = markdown(text)
         basic_information = basic_information_from_text(text)
         print_basic_information(basic_information)
+
+
+def practice29():
+    """
+        29. 国旗画像の URL を取得する
+
+        テンプレートの内容を利用し, 国旗画像の URL を取得せよ. (ヒント:
+        MediaWiki API の imageinfo を呼び出して, ファイル参照を URL に変換すれ
+        ばよい)
+
+         * MediaWiki API
+           https://www.mediawiki.org/wiki/API:Main_page/ja
+         * MediaWiki API (imageinfo)
+           https://www.mediawiki.org/wiki/API:Imageinfo
+    """
+    # MediaWiki API に大量リクエストを送らないように, 対象の国を制限する.
+    target_countries = [
+        '日本',         # 国旗画像を含む
+        'エジプト',     # 国旗画像を含む
+        'キュラソー島', # 国旗画像を含まない
+    ]
+
+    for document in _load_documents():
+        title, text = document['title'], document['text']
+        if title not in target_countries:
+            continue
+        print('==== {}'.format(title))
+        basic_information = basic_information_from_text(text)
+        country_flag_image_file_url = \
+            country_flag_image_file_url_from_basic_information(basic_information)
+        print(country_flag_image_file_url)
 
 
 def test():
