@@ -5,6 +5,7 @@
 
 from chapter2 import text_from_file
 import doctest
+import functools
 import itertools
 import json
 import parameterized
@@ -419,6 +420,108 @@ class MarkdownInternalLinksTestCase(unittest.TestCase):
         self.assertEqual(expected, markdown_internal_links(text))
 
 
+def markdown_file(
+        text: str,
+    ) -> str:
+    """
+        MediaWiki のファイルのマークアップを通常テキストに置換する.
+
+        Arguments
+        ---------
+        text : str
+            テキスト.
+
+        Returns
+        -------
+        str
+            ファイルのマークアップを通常テキストに置換した文字列.
+
+        Examples
+        --------
+        >>> markdown_file('[[File:a.png]]')
+        'a.png'
+        >>> markdown_file('[[ファイル:a.png]]')
+        'a.png'
+    """
+    pattern = re.compile(r'\[\[(?:File|ファイル):([^|\]+)(?:[^\]]*?)]]')
+    return pattern.sub('\\1', text)
+
+
+class MarkdownFileTestCase(unittest.TestCase):
+    """
+        markdown_file() のテストケース.
+    """
+    # TODO テストを書く.
+
+
+def markdown_category(
+        text: str,
+    ) -> str:
+    """
+        MediaWiki のカテゴリのマークアップを通常テキストに置換する.
+
+        Arguments
+        ---------
+        text : str
+            テキスト.
+
+        Returns
+        -------
+        str
+            カテゴリのマークアップを通常テキストに置換した文字列.
+
+        Examples
+        --------
+        >>> markdown_category('[[Category:ヘルプ|はやみひよう]]')
+        'はやみひよう'
+    """
+    pattern = re.compile(r'\[\[Category:[^|\]]+\|([^\]]+?)]]')
+    return pattern.sub('\\1', text)
+
+
+class MarkdownCategoryTestCase(unittest.TestCase):
+    """
+        markdown_category() のテストケース.
+    """
+    # TODO テストを書く.
+
+
+def markdown(
+        text: str,
+    ) -> str:
+    """
+        MediaWiki のマークアップを通常テキストに置換する.
+
+        Arguments
+        ---------
+        text : str
+            テキスト.
+
+        Returns
+        -------
+        str
+            マークアップを通常テキストに置換した文字列.
+    """
+    markdown_functions = [
+        markdown_enphasis,
+        markdown_internal_links,
+        markdown_file,
+        markdown_category,
+    ]
+
+    def reducer(text, markdown_function):
+        return markdown_function(text)
+
+    return functools.reduce(reducer, markdown_functions, text)
+
+
+class MarkdownTestCase(unittest.TestCase):
+    """
+        markdown() のテストケース.
+    """
+    # TODO テストを書く.
+
+
 def practice20():
     """
         20. JSONデータの読み込み
@@ -546,6 +649,23 @@ def practice27():
         print('==== {}'.format(title))
         text = markdown_enphasis(text)
         text = markdown_internal_links(text)
+        basic_information = basic_information_from_text(text)
+        print_basic_information(basic_information)
+
+
+def practice28():
+    """
+        28. MediaWiki マークアップの除去
+
+        27 の処理に加えて, テンプレートの値から MediaWiki マークアップを可能な
+        限り除去し, 国の基本情報を整形せよ.
+    """
+    documents = _load_documents()
+
+    for document in documents:
+        title, text = document['title'], document['text']
+        print('==== {}'.format(title))
+        text = markdown(text)
         basic_information = basic_information_from_text(text)
         print_basic_information(basic_information)
 
