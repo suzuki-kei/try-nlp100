@@ -335,11 +335,11 @@ class MarkdownEnphasisTestCase(unittest.TestCase):
         self.assertEqual(expected, markdown_enphasis(text))
 
 
-def remove_internal_links(
+def markdown_internal_links(
         text: str,
     ) -> str:
     """
-        テキスト中の内部リンクを除去する.
+        MediaWiki の内部リンクを通常テキストに置換する.
 
         Arguments
         ---------
@@ -349,67 +349,74 @@ def remove_internal_links(
         Returns
         -------
         str
-            内部リンクを除去したテキスト.
+            内部リンクを通常テキストに置換した文字列.
+
+        Examples
+        --------
+        >>> markdown_internal_links('[[記事名]]')
+        '記事名'
+        >>> markdown_internal_links('[[記事名|表示テキスト]]')
+        '表示テキスト'
     """
     pattern = re.compile(r'\[\[(?!ファイル:|File:|Category:|]])(?:[^|\]]+\|([^\]]+?)|([^\]]+?))]]')
     return pattern.sub('\\1\\2', text)
 
 
-class RemoveInternalLinksTestCase(unittest.TestCase):
+class MarkdownInternalLinksTestCase(unittest.TestCase):
     """
-        remove_internal_links() のテストケース.
+        markdown_internal_links() のテストケース.
     """
 
     def test(self):
         # 空文字列を渡した場合.
         text = ''
         expected = text
-        self.assertEqual(expected, remove_internal_links(text))
+        self.assertEqual(expected, markdown_internal_links(text))
 
         # マークアップを含まない場合.
         text = 'abc'
         expected = text
-        self.assertEqual(expected, remove_internal_links(text))
+        self.assertEqual(expected, markdown_internal_links(text))
 
         # 強調マークアップを含む場合.
         text = '0: zero, 1: "one", 2: ""two"", 3: """three"""'
         expected = text
-        self.assertEqual(expected, remove_internal_links(text))
+        self.assertEqual(expected, markdown_internal_links(text))
 
         # 内部リンクを含む場合.
         text = 'aaa [[記事名]] bbb [[記事名#節名]] ccc [[記事名|表示文字]] ddd [[記事名#節名|表示文字]] eee'
         expected = 'aaa 記事名 bbb 記事名#節名 ccc 表示文字 ddd 表示文字 eee'
-        self.assertEqual(expected, remove_internal_links(text))
+        self.assertEqual(expected, markdown_internal_links(text))
 
         # 外部リンクを含む場合.
         text = '[http://www.example.com 外部リンク]'
         expected = text
-        self.assertEqual(expected, remove_internal_links(text))
+        self.assertEqual(expected, markdown_internal_links(text))
 
         # タグを含む場合.
         text = '注記 = <references group="注"/>註1: 人口、及び各種GDPの数値'
         expected = text
-        self.assertEqual(expected, remove_internal_links(text))
+        self.assertEqual(expected, markdown_internal_links(text))
 
         # テンプレートを含む場合.
         text = '注記 = {{Reflist|group="注釈"}}'
         expected = text
-        self.assertEqual(expected, remove_internal_links(text))
+        self.assertEqual(expected, markdown_internal_links(text))
 
         # ファイルを含む場合.
         text = '[[ファイル:Wikipedia-logo-v2-ja.png|thumb|説明文]]'
         expected = text
-        self.assertEqual(expected, remove_internal_links(text))
+        self.assertEqual(expected, markdown_internal_links(text))
 
         # ファイルを含む場合.
         text = '[[File:Wikipedia-logo-v2-ja.png|thumb|説明文]]'
         expected = text
-        self.assertEqual(expected, remove_internal_links(text))
+        self.assertEqual(expected, markdown_internal_links(text))
 
         # カテゴリを含む場合.
         text = '[[Category:ヘルプ|はやみひよう]]'
         expected = text
-        self.assertEqual(expected, remove_internal_links(text))
+        self.assertEqual(expected, markdown_internal_links(text))
 
 
 def practice20():
@@ -538,7 +545,7 @@ def practice27():
         title, text = document['title'], document['text']
         print('==== {}'.format(title))
         text = markdown_enphasis(text)
-        text = remove_internal_links(text)
+        text = markdown_internal_links(text)
         basic_information = basic_information_from_text(text)
         print_basic_information(basic_information)
 
