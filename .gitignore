@@ -5,7 +5,5 @@
 /virtualenv/
 
 # temporary files
-/data/chapter2/col1.txt
-/data/chapter2/col2.txt
-/data/chapter2/popular-names.*.txt
+/data/
 
